@@ -1,0 +1,110 @@
+React Native Code
+-------------------------------------------------------------------------
+
+//For Image Settings
+//useState, functions
+
+    const [image, setImage] = useState(null);
+    //const [imageKey, setImageKey] = useState(null);
+
+    const handleFileChange = (e) => {
+        setImage(e.target.files[0]);
+    };
+
+    const uploadImage = async () => {
+        if (!image) return alert('請選擇圖片');
+    
+        const formData = new FormData();
+        formData.append('email', emailText);
+        formData.append('image', image);
+
+        var url = baseURL+"/imageUpload"
+        try 
+        {
+            /*const response = */
+            await axios.post(url, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            //setImageKey(response.data.user.profileImageKey);
+            alert('上傳成功！');
+        } 
+        catch (err) 
+        {
+            console.error(err);
+            alert('上傳失敗');
+        }
+    };
+
+
+
+
+    const [images, setImages] = useState([]);
+    const getImages = async () => {
+        //if (!email) return alert('請輸入 Email');
+        
+        var url = baseURL+"/imageGet/by-email"
+        try {
+          const res = await axios.get(url, {
+            params: { email: emailText }
+          });
+          setImages(res.data.images);
+        } catch (err) {
+          console.error(err);
+          alert('取得圖片失敗');
+        }
+    };
+
+
+
+
+
+
+
+
+
+
+//Render HTML
+{/*Image Input */}
+
+                        <View className="mx-auto w-11/12 h-12 z-10 flex-row rounded-lg my-3 "
+                            style={{backgroundColor:themeColors.gray_166}}
+                        >
+                            <input
+                                type="file"
+                                accept="image/*"
+                                className="mb-4"
+                                onChange={handleFileChange}
+                            />
+                            <button
+                                onClick={uploadImage}
+                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mb-4"
+                            >
+                                上傳圖片
+                            </button>
+                            
+                            
+
+                        </View>
+
+
+                        <div className="p-6 min-h-screen flex flex-col items-center">
+                            
+                            <button
+                                onClick={getImages}
+                                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                            >
+                                Get Images
+                            </button>
+
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+                                {images.map((url, idx) => (
+                                <img key={idx} src={url} alt={`img-${idx}`} className="w-48 h-48 object-cover rounded shadow" />
+                                ))}
+                            </div>
+                        </div>
+
+
+
+
+
+
